@@ -21,17 +21,28 @@ metka1:
 	cmp ah, 00h
 	jne read_error
 
-	mov cx,metka3-message
-	mov bp,metka2
-	jmp print
+	mov cx, metka3-message
+        mov si, metka2
+        jmp print
 
 read_error:
-	mov cx,metka2-message_error
-	mov bp,message_error
+        mov cx, metka2-message_error
+        mov si, message_error
 
 print:
-	mov ah, 13h
-	int 10h
+
+        xor di, di
+        mov ax, 0xb800
+        push ax
+        pop es
+        mov ah, 2
+cycle:
+        lodsb
+        cmp al,0
+        je fin
+        stosw
+        jmp cycle
+fin: 
 	cli
 	hlt
 	
