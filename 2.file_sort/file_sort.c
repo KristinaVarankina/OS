@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
 			int read=fscanf(in,"%d",&input);
 			if(!read)
 			{
+				if(numbers!=NULL)
+					free (numbers);
 				fclose(in);
 				print_err("Wrong input type in file: ",argv[start]);
 			}
