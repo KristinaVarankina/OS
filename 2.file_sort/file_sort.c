@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	int input;
 	int *more_numbers;
 	int i=0;
-	if(argc<3)
+	if(argc<4)
 		print_err("Wrong parametrs format","");
 	while(start<argc-1)
 	{
