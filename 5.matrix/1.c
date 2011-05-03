@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define x 2500
-#define y 100
+#define a 2500
+#define b 100
 
 int main()
 {
-	int x = y = 500;
-	int matr[x][y];
+	int x = 500;
+	int y = 500;
+	int matr[a][b];
 	int rep=1000;
 	int i,j,k,tmp;
 	clock_t time1,time2,time3;
