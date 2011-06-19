@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ !(-r $1 && -r $2)  ]]; then 
-	echo "files aren’t readable" ;
+	echo "files arenot readable" ;
 	exit
 fi
 
