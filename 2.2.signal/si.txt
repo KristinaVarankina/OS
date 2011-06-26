@@ -1,0 +1,5 @@
+g++ si.c -o si && ./si
+^\pid 20072
+group pid 100
+^Cpid 20072
+group pid 100
