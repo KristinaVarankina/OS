@@ -7,36 +7,39 @@
 volatile int *Number, *Entering;
 int n;
 int k=0;
+int count=0;
 
 int max (volatile int* arr ) {
-    int i, max = arr[ 0 ];
-    for ( i = 1 ; i < n ; i++ )
+    int i, max = 0;
+    for ( i = 0; i < n ; i++ ){
         if ( Number[ i ] > max )
-            return Number[ i ];
-    return Number[ 0 ];
+			{max = Number[ i ];}
+			mfence;}
+	return Number[ i ];
 }
 static void* T1 ( void* args ) {
     pthread_detach( pthread_self() ); 
     int i = k, j;
     while ( 1 ) {
         Entering[ i ] = 1;
-		mfence; 
+			mfence;
         Number[ i ] = 1 + max( Number );
-        Entering[ i ] = 0;
-		mfence; 
+			Entering[ i ] = 0;
+		mfence;
         for ( j = 0 ; j < n ; j++ ) {
             while ( Entering[ j ] ) {}
             while ( Number[ j ] != 0 && ( Number[ j ] <  Number[ i ] || ( Number[ j ] == Number[ i ] && j < i ) ) ) {}
         }
+		 /* Critical section. */
         printf( "Thread ID: %d start\n", i );
-        for ( j = 0 ; j < 0xFFFFFF ; j++ ) {}
+        for ( j = 0 ; j < 0xFFFFFF ; j++ ) {mfence;}
         printf( "Thread ID: %d end\n", i );
+		 /* End of critical section. */
         Number[ i ] = 0;
-		mfence; 
+			mfence;
     }
     return NULL;
 }
-
 //static void* T2 ( void* args ) {
 //    pthread_detach( pthread_self() ); 
  //   int i = 1, j;
@@ -66,11 +69,12 @@ int main (int argc,char **argv) {
 
     for ( i = 0 ; i < n ; i++ )
         Number[ i ] = Entering[ i ] = 0;	
-	while (k<n){
+	while (count<n){
    if ( pthread_create( &t1, NULL, T1, NULL ) )
      exit( -1 );
-	 k++;
-	 mfence; }
+	 k+=1;
+	 mfence;
+	 count++;}
  // if ( pthread_create( &t1, NULL, T2, NULL ) )
  //    exit( -1 );
 
